@@ -8,8 +8,22 @@ class CategoryAdmin(admin.ModelAdmin):
     
 class PostAdmin(admin.ModelAdmin):
     readonly_fields = ('created', 'updated')
-    list_display = ('title','author', 'published')# Esto me mostraras estas tres columnas
-    ordering = ('author', 'published')# Ordena por 
+    list_display = ('title','author', 'published', 'post_categories')# Esto me mostraras estas tres columnas
+    ordering = ('author', 'published')# Ordena por author y fecha
+    search_fields = ('title', 'content', 'author__username', 'categories__name')# Buscador de contendio en el admin
+    #author__username es para buscar por author
+    #con el name podemos buscar por categorias
+    date_hierarchy = 'published'# Para buscar por gerarquias de fechas, por dias, años
+    list_filter = ('author__username', 'categories__name')#Este nos agrega un filtro para poder buscar 
+    
+    
+    # este código personaliza cómo se muestra la información de las categorías en el panel de          #
+    # administración de Django para los registros del modelo Post, toma las categorías asociadas a     #
+    # un registro y las muestra como una lista separada por comas en una columna llamada "Categorias". #
+    def post_categories(self, obj):                                                                    #
+        return ",".join([c.name for c in obj.categories.all().order_by("name")])                       # 
+    post_categories.short_description = "Categorias"                                                   #
+   #####################################################################################################
     
 admin.site.register(Post, PostAdmin)
 admin.site.register(Category, CategoryAdmin)
