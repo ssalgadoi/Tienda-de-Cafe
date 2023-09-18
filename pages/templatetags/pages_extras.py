@@ -9,6 +9,6 @@ register = template.Library()
 @register.simple_tag
 
 # Funsion del tag
-def get_pages_list():
+def get_page_list():
     pages = Page.objects.all()
     return pages
